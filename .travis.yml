@@ -7,15 +7,12 @@ python:
   - "3.4"
   - "3.5"
   - "pypy"
+os:
+  - linux
 before_install:
   - pip install codecov
   - pip install 'coverage<4'
 script:
-  - ./packages/gcUpdatePlugins.py # randomized order
-  - ./packages/gcUpdatePlugins.py
-  - ./packages/gcUpdatePlugins.py
-  - ./packages/gcUpdatePlugins.py
-  - ./packages/gcUpdatePlugins.py
   - export WRAPPER='coverage run -a'
   - ./setup.py install
   - rm -rf packages
@@ -26,5 +23,48 @@ script:
   - $WRAPPER $GC_SCRIPT -G --debug docs/examples/ExampleS1_stresstest.conf
   - $WRAPPER $GC_SCRIPT docs/examples/ExampleS1_stresstest.conf
   - diff ExampleS1_stresstest.list docs/examples/ExampleS1_stresstest.list.ref
+  - ./scripts/downloadFromSE.py docs/examples/ExampleS1_stresstest.conf -T trivial --slowdown=0
+  - ./scripts/parameterList.py docs/examples/ExampleS1_stresstest.conf -TlcLv -D docs/examples/work.ExampleS1_stresstest/datamap.tar
+  - ./scripts/datasetListFromGC.py docs/examples/ExampleS1_stresstest.conf -s '*' -D'.:-1:' -d '@DELIMETER_DS@'
+  - $WRAPPER $GC_SCRIPT docs/examples/ExampleS2_stresscms1.conf
+  - $WRAPPER $GC_SCRIPT docs/examples/ExampleS2_stresscms1.conf -cm 1
+  - $WRAPPER $GC_SCRIPT docs/examples/ExampleS2_stresscms1.conf
+  - $WRAPPER $GC_SCRIPT docs/examples/ExampleS2_stresscms2.conf
+  - $WRAPPER $GC_SCRIPT docs/examples/ExampleS2_stresscms2.conf -cm 1
+  - $WRAPPER $GC_SCRIPT docs/examples/ExampleS2_stresscms2.conf
+  - $WRAPPER $GC_SCRIPT docs/examples/ExampleS2_stresscms3.conf
+  - $WRAPPER $GC_SCRIPT docs/examples/ExampleS2_stresscms3.conf -cm 1
+  - $WRAPPER $GC_SCRIPT docs/examples/ExampleS2_stresscms3.conf
+  - diff ExampleS2_stresscms3.list docs/examples/ExampleS2_stresscms3.list.ref
+  - $WRAPPER ./testsuite/cms/TEST_lumifilter.py
+  - $WRAPPER ./testsuite/cms/TEST_lumiproc.py
+  - $WRAPPER ./testsuite/config/TEST_configAPI1.py
+  - $WRAPPER ./testsuite/config/TEST_configAPI2.py
+  - $WRAPPER ./testsuite/config/TEST_configAPI3.py
+  - $WRAPPER ./testsuite/config/TEST_configHandlers.py
+  - $WRAPPER ./testsuite/config/TEST_config.py
+  - $WRAPPER ./testsuite/config/TEST_configTyped.py
+  - $WRAPPER ./testsuite/config/TEST_configView.py
+  - $WRAPPER ./testsuite/config/TEST_matcher.py
+  - $WRAPPER ./testsuite/datasets/TEST_dataresync1.py
+  - $WRAPPER ./testsuite/datasets/TEST_dataresync2.py
+  - $WRAPPER ./testsuite/datasets/TEST_dataresync3.py
+  - $WRAPPER ./testsuite/datasets/TEST_dataresync4.py
+  - $WRAPPER ./testsuite/datasets/TEST_dataresync_meta.py
+  - $WRAPPER ./testsuite/datasets/TEST_dataresync_reorder.py
+  - $WRAPPER ./testsuite/datasets/TEST_provider.py
+  - $WRAPPER ./testsuite/datasets/TEST_splitter.py
+  - $WRAPPER ./testsuite/parameters/TEST_config_param.py
+  - $WRAPPER ./testsuite/parameters/TEST_padapter1.py
+  - $WRAPPER ./testsuite/parameters/TEST_padapter.py
+  - $WRAPPER ./testsuite/parameters/TEST_pfactory.py
+  - $WRAPPER ./testsuite/parameters/TEST_pproc.py
+  - $WRAPPER ./testsuite/parameters/TEST_psource.py
+  - $WRAPPER ./testsuite/TEST_broker.py
+  - $WRAPPER ./testsuite/TEST_jobselector.py
+  - $WRAPPER ./testsuite/TEST_process.py
+  - $WRAPPER ./testsuite/TEST_proxy.py
+  - $WRAPPER ./testsuite/TEST_utils.py
+  - $WRAPPER ./testsuite/TEST_webservice.py
 after_success:
   - codecov

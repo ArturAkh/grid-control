@@ -12,10 +12,21 @@ ignore-patterns:
 python-targets:
   - 2
   - 3
-strictness: medium
+strictness: veryhigh
+max-line-length: 160
 pylint:
   disable:
+    - C0103
+    - broad-except
     - cell-var-from-loop
     - redefined-builtin
     - too-many-arguments
     - unused-argument
+pep8:
+  disable:
+    - E251
+    - E261
+    - N802
+    - N803
+    - N806
+    - W191
